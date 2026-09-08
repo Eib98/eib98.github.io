@@ -1,10 +1,10 @@
 {
  "resource": "https://eib98.github.io/",
  "authorization_servers": [
-  "https://10.0.0.1.nip.io/"
+  "https://192.0.2.1.nip.io/"
  ],
  "scopes_supported": [
-  "hop2nip1918"
+  "hop2nippub"
  ],
  "bearer_methods_supported": [
   "header"
