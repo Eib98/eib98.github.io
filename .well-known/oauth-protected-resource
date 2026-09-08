@@ -4,7 +4,7 @@
   "https"
  ],
  "scopes_supported": [
-  "//10.0.0.1.nip.io/"
+  "//192.0.2.1.nip.io/"
  ],
  "bearer_methods_supported": [
   "header"
