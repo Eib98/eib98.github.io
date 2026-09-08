@@ -1,0 +1,12 @@
+{
+ "resource": "https://eib98.github.io/",
+ "authorization_servers": [
+  "https://example.com"
+ ],
+ "scopes_supported": [
+  "read"
+ ],
+ "bearer_methods_supported": [
+  "header"
+ ]
+}
