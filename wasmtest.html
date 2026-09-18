@@ -1,0 +1,14 @@
+<!doctype html><html><head><title>pending</title></head><body>wasmprobe
+<script>
+(function(){
+  var o={where:location.origin, chrome:(navigator.userAgent.match(/Chrome.([0-9.]+)/)||[])[1]};
+  try{ new Function('return 1')(); o.eval='OK'; }catch(e){ o.eval='BLOCKED'; }
+  try{ var m=new WebAssembly.Module(new Uint8Array([0,97,115,109,1,0,0,0]));
+       new WebAssembly.Instance(m); o.wasm='OK'; }
+  catch(e){ o.wasm='BLOCKED:'+(''+e.message).slice(0,50); }
+  o.coi = self.crossOriginIsolated;
+  document.title = JSON.stringify(o);
+  document.body.textContent = JSON.stringify(o);
+  window.__WASMPROBE__ = o;
+})();
+</script></body></html>
