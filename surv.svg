@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="400" height="200" viewBox="0 0 400 200">
+  <rect width="400" height="200" fill="#eee"/>
+  <text x="10" y="20" font-size="12" onclick="alert(1)" onload="alert(2)">T-ONHANDLER</text>
+  <text x="10" y="40" font-size="12" id="keepid" class="keepclass" data-x="keepdata">T-ATTRS</text>
+  <a xlink:href="javascript:alert(3)"><text x="10" y="60" font-size="12">T-ANCHOR-JS</text></a>
+  <a href="https://eib98.github.io/xx"><text x="10" y="80" font-size="12">T-ANCHOR-HTTP</text></a>
+  <image x="200" y="10" width="40" height="40" xlink:href="https://eib98.github.io/probe-png.png"/>
+  <use xlink:href="#keepid" x="0" y="100"/>
+  <foreignObject x="200" y="60" width="150" height="60"><div xmlns="http://www.w3.org/1999/xhtml">FO-HTML</div></foreignObject>
+  <animate attributeName="x" from="0" to="10" dur="1s"/>
+  <style>.keepclass{fill:#f00}</style>
+  <desc>DESC-KEEP</desc><title>TITLE-KEEP</title>
+</svg>
