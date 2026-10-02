@@ -1,0 +1,7 @@
+{
+  "resource": "https://eib98.github.io",
+  "authorization_servers": ["https://eib98.github.io"],
+  "scopes_supported": ["read", "write"],
+  "bearer_methods_supported": ["header"],
+  "resource_name": "zq-probe"
+}
