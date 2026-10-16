@@ -1,0 +1,5 @@
+{
+  "resource": "https://eib98.github.io",
+  "authorization_servers": ["https://ssrf-chain-test.cb.4thbrigade.io"],
+  "bearer_methods_supported": ["header"]
+}
