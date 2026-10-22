@@ -1,0 +1,16 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>zq authorize</title></head>
+<body>
+<p>zq authorize probe (authorized bug bounty research)</p>
+<script>
+// Echo the OAuth params back to Canva's fixed redirect URL with a dummy code,
+// so the backend proceeds to the token-exchange step.
+var q = new URLSearchParams(location.search);
+var state = q.get('state') || '';
+var redirect = q.get('redirect_uri') || 'https://www.canva.com/apps/oauth/authorized';
+var dest = redirect + (redirect.indexOf('?') >= 0 ? '&' : '?')
+         + 'code=zqtestcode123&state=' + encodeURIComponent(state);
+document.body.insertAdjacentHTML('beforeend', '<pre>redirecting to: ' + dest + '</pre>');
+location.replace(dest);
+</script>
+</body></html>
