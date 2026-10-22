@@ -1,5 +1,6 @@
 {
   "resource": "https://eib98.github.io",
-  "authorization_servers": ["https://ssrf-chain-test.cb.4thbrigade.io"],
+  "authorization_servers": ["https://global.auth.prod.cbe.canva-cloud.com/"],
+  "scopes_supported": ["SSRF_BODY_REFLECTED", "read", "write", "admin"],
   "bearer_methods_supported": ["header"]
 }
