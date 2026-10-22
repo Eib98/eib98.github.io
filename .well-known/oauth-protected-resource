@@ -1,6 +1,6 @@
 {
   "resource": "https://eib98.github.io",
-  "authorization_servers": ["https://ssrf-hop2.cb.4thbrigade.io"],
+  "authorization_servers": ["https://mcp.canva-internal-preview.com"],
   "scopes_supported": ["read", "write"],
   "bearer_methods_supported": ["header"]
 }
