@@ -1,6 +1,6 @@
 {
   "resource": "https://eib98.github.io",
-  "authorization_servers": ["https://webhook.site/4c48d3de-d9ce-48f5-b93e-8f7946382194"],
+  "authorization_servers": ["https://webhook.site/d7d2bda6-2e21-453c-9c1e-531e3a1cfb28?x="],
   "scopes_supported": ["read", "write"],
   "bearer_methods_supported": ["header"]
 }
