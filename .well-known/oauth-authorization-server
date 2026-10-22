@@ -1,5 +1,5 @@
 {
-  "issuer": "https://eib98.github.io",
+  "issuer": "https://eib98.github.io/",
   "authorization_endpoint": "https://eib98.github.io/authorize",
   "token_endpoint": "https://cb.4thbrigade.io/dcr-token-test",
   "registration_endpoint": "https://cb.4thbrigade.io/dcr-registration-test",
